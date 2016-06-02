@@ -11,7 +11,7 @@ In these steps, you won't deploy the application to Azure. However, you will nee
 ## Step 1. Create a new Azure AD directory
 
 > This AD directory would belong to the application provider (Tailspin, in our example), not the customers who use the application.
-Registering the application enables the application to use Azure AD for authentication. For more information, see [Authentication and sign-in][authz].
+Registering the application enables the application to use Azure AD for authentication. For more information, see [Authentication in multitenant apps, using Azure AD and OpenID Connect][authz].
 
 1. Sign into the [Azure management portal][portal].
 
@@ -118,7 +118,7 @@ Update the application manifest for the web API.
             "allowedMemberTypes": ["User"],
             "description": "Creators can create surveys",
             "displayName": "SurveyCreator",
-            "id": "[Generate a new GUID. Example: 1b4f816e-5eaf-48b9-8613-7923830595ad]",
+            "id": "<Generate a new GUID. Example: 1b4f816e-5eaf-48b9-8613-7923830595ad>",
             "isEnabled": true,
             "value": "SurveyCreator"
           },
@@ -126,7 +126,7 @@ Update the application manifest for the web API.
             "allowedMemberTypes": ["User"],
             "description": "Administrators can manage the surveys in their tenant",
             "displayName": "SurveyAdmin",
-            "id": "[Generate a new GUID]",
+            "id": "<Generate a new GUID>",
             "isEnabled": true,
             "value": "SurveyAdmin"
           }
@@ -135,7 +135,7 @@ Update the application manifest for the web API.
 
 5.	In the `knownClientApplications` property, add the client ID for the Surveys web application. (You got the client ID when you registered the Surveys application in Azure AD.)
 
-          "knownClientApplications": "[Web app client ID. Example: be2cea23-aa0e-4e98-8b21-2963d494912e]",
+          "knownClientApplications": "<Surveys app client ID. Example: be2cea23-aa0e-4e98-8b21-2963d494912e>",
 
   This setting adds the Surveys app to the list of clients authorized to call the web API.
 
@@ -181,7 +181,7 @@ For more information about creating a Redis cache, see [How to Use Azure Redis C
 
     - `AzureAd:ClientId`: The client ID of the Surveys app.
     - `AzureAd:ClientSecret`: The key that you generated when you registered the Surveys application in Azure AD.
-    - `AzureAd:WebApiResourceId`: The App ID URI that you specified when you created the Surveys.WebAPI application in Azure AD.
+    - `AzureAd:WebApiResourceId`: The App ID URI that you specified when you created the Surveys.WebAPI application in Azure AD. Example: `https://tailspin.onmicrosoft.com/surveys.webapi`
     - `Redis:Configuration`: Build this string from the DNS name of the Redis cache and the primary access key. For example, "tailspin.redis.cache.windows.net,password=2h5tBxxx,ssl=true".
 
 4.	Save the updated secrets.json file.
@@ -205,12 +205,19 @@ In this step, you will use Entity Framework 7 to create a local SQL database, us
 
 1.	Open a command window
 
-2.	Navigate to the Tailspin.Surveys.Data project.
+2.	Change directories to `/src/Tailspin.Surveys.Data`.
 
 3.	Run the following commands:
 
           dnvm use 1.0.0-rc1-final
           dnx ef database update
+
+You should see output like the following:
+
+```
+Applying migration '20151208175616_Initial'.
+Done.
+```
 
 ## Step 9. Run the application
 
@@ -277,6 +284,7 @@ Now go back to the app and sign in again. Click **My Surveys**. If the user is a
 
 
 [aspnet]: https://docs.asp.net/en/latest/getting-started/installing-on-windows.html#install-asp-net-with-visual-studio
+[authz]: https://azure.microsoft.com/documentation/articles/guidance-multitenant-identity-authenticate/
 [redis]: https://azure.microsoft.com/documentation/articles/cache-dotnet-how-to-use-azure-redis-cache/
 [portal]: https://manage.windowsazure.com
 [VS2015]: https://www.visualstudio.com/products/vs-2015-product-editions
